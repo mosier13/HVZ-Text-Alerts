@@ -3,7 +3,7 @@ import sys
 import re
 import datetime
 from time import sleep
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 import smtplib
 from getpass import getpass
 from parser import parser
@@ -31,7 +31,9 @@ def compareDict(old_dict,new_dict):
     for player in new_dict:
         if new_dict[player] == 'human':
             human_count+=1   
-        elif new_dict[player] == 'zombie' or new_dict[player] == 'OZ':
+        elif new_dict[player] == 'zombie':
+            zombie_count+=1
+        elif new_dict[player] == 'OZ':
             zombie_count+=1   
         else:
             raise ValueError('Unknown status of player '+player+': '+new_dict[player])
@@ -39,7 +41,9 @@ def compareDict(old_dict,new_dict):
         if (player not in old_dict.keys()):#new player joining
             if new_dict[player] == 'human':
                 joining_human.append(player)
-            elif new_dict[player] == 'zombie' or new_dict[player] == 'OZ':
+            elif new_dict[player] == 'zombie':
+                joining_zombie.append(player)
+            elif new_dict[player] == 'OZ':
                 joining_zombie.append(player)
             else:
                 print 'strange status of player '+player+': '+new_dict[player]
@@ -57,9 +61,9 @@ def compareDict(old_dict,new_dict):
         else:
             print 'unable to process '+player+':'+old_dict[player]+'->'+new_dict[player]
 
-    for player in old_dict:
-        if player not in new_dict:
-            removed.append(player)
+    #for player in old_dict:
+        #if player not in new_dict:
+            #removed.append(player)
 
     #return the results of the diff
     result = ''
@@ -73,8 +77,7 @@ def compareDict(old_dict,new_dict):
         result += 'Revived: '+(', '.join(revived))+' '
     if (len(revealed_OZs)>0):
         result += 'Revealed OZ: '+(', '.join(revealed_OZs))+' '
-    if (len(removed)>0):
-        result += 'Removed: '+(', '.join(removed))+' '
+    #if (len(removed)>0):
+        #result += 'Removed: '+(', '.join(removed))+' '
     
     return result.strip(), human_count, zombie_count
-
